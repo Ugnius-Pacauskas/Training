@@ -7,23 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.IO;
 
-namespace HangedMan
+namespace HangedManF
 {
-    public partial class MainForm : Form
+    public partial class Form1 : Form
     {
-
-        private string[] words;
-
-        public MainForm()
+        public Form1()
         {
             InitializeComponent();
-        }
-
-        private void StartBtn_Click(object sender, EventArgs e)
-        {
-            words = File.ReadAllLines("word.txt");
         }
     }
 }
