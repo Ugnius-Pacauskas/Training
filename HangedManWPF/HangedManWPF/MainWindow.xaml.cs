@@ -31,12 +31,17 @@ namespace HangedManWPF
 
         private void StartBtn_Click(object sender, RoutedEventArgs e)
         {
+            HideLabels();
+            hangedManGame.Start();
+            updateGameStatus(hangedManGame);
+        }
+
+        private void HideLabels()
+        {
             winConditionLabel.Content = "";
             statusLabel.Content = "";
             livesLabel.Content = "";
             seacretWordLabel.Content = "";
-            hangedManGame.Start();
-            updateGameStatus(hangedManGame);
         }
 
         private void Window_KeyUp(object sender, KeyEventArgs e)
