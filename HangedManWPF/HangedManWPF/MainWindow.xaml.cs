@@ -21,67 +21,57 @@ namespace HangedManWPF
     public partial class MainWindow : Window
     {
 
-        Lives lives;
-        WordsContainer words;
-        SeacretWord seacretWord;
+        IHangedManGame hangedManGame;
 
         public MainWindow()
         {
             InitializeComponent();
-            lives = new Lives(6);
-            words = new WordsContainer();
+            hangedManGame = new HangedManGame();
         }
 
-        private void startBtn_Click(object sender, RoutedEventArgs e)
+        private void StartBtn_Click(object sender, RoutedEventArgs e)
         {
-            lives.ResetLives();
-            seacretWord = new SeacretWord(words.GetRandomWord());
-            updateGameStatus();
+            winConditionLabel.Content = "";
+            statusLabel.Content = "";
+            livesLabel.Content = "";
+            seacretWordLabel.Content = "";
+            hangedManGame.Start();
+            updateGameStatus(hangedManGame);
         }
 
         private void Window_KeyUp(object sender, KeyEventArgs e)
         {
-            KeyGuessState guessState = KeyGuessState.None;
-            if (!lives.IsAlive())
+            if (hangedManGame.GetGameState() != EGameState.Playing)
             {
                 return;
             }
-            char key = e.Key.ToString().ToLower()[0];
-            if (Char.IsLetter(key))
-            {
-                guessState = seacretWord.GuessKey(key);
-                if (guessState == KeyGuessState.Incorect)
-                {
-                    lives.LoseLive();
-                }
-            }
+            hangedManGame.GuessKey(e.Key);
 
-            updateGameStatus();
-            updateStatusLabel(guessState, key);
+            updateGameStatus(hangedManGame);
+            updateStatusLabel(hangedManGame.GetKeyGuessState(), e.Key.ToString());
         }
 
-        private void ChangeWinStatus(bool isAlive, bool isGuesed)
+        private void ChangeWinStatus(EGameState gameState)
         {
-            if (!isAlive)
+            switch (gameState)
             {
-                winConditionLabel.Content = "You Lost";
-                return;
-            }
-            if (isGuesed)
-            {
-                winConditionLabel.Content = "You Won";
-                return;
+                case EGameState.Lost:
+                    winConditionLabel.Content = "You Lost";
+                    break;
+                case EGameState.Won:
+                    winConditionLabel.Content = "You Won";
+                    break;
             }
         }
 
-        private void updateGameStatus()
+        private void updateGameStatus(IHangedManGame hangedManGame)
         {
-            seacretWordLabel.Content = seacretWord.GetHiddenWord();
-            livesLabel.Content = "Lives: " + lives.ToString();
-            ChangeWinStatus(lives.IsAlive(), seacretWord.IsGuesed());
+            seacretWordLabel.Content = hangedManGame.GetHiddenWord();
+            livesLabel.Content = "Lives: " + hangedManGame.GetLivesCount();
+            ChangeWinStatus(hangedManGame.GetGameState());
         }
 
-        private void updateStatusLabel(KeyGuessState kgs, char key)
+        private void updateStatusLabel(KeyGuessState kgs, string key)
         {
             string temp = "Your guess: " + key;
             switch (kgs)
@@ -94,6 +84,9 @@ namespace HangedManWPF
                     break;
                 case (KeyGuessState.Incorect):
                     temp += " is incorrect";
+                    break;
+                case (KeyGuessState.Invalid):
+                    temp += " is invalid";
                     break;
                 default:
                     temp += " is a the answer to life, universe and everything";

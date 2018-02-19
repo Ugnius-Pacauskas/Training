@@ -12,11 +12,13 @@ namespace HangedManWPF
         None,
         Incorect,
         Correct,
-        AlreadyGuessed
+        AlreadyGuessed,
+        Invalid
     }
 
     class SeacretWord
     {
+
         private string seacretWord;
         private List<char> guessedChars;
         private List<char> correctChars;

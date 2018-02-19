@@ -54,6 +54,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="GameState.cs" />
+    <Compile Include="HangedManGame.cs" />
+    <Compile Include="IHangedManGame.cs" />
     <Compile Include="Lives.cs" />
     <Compile Include="SeacretWord.cs" />
     <Compile Include="WordsContainer.cs" />
